@@ -5,6 +5,7 @@ public class Conta {
     private int conta;
     private String nome;
     private float saldo;
+    private float cheque;
 
     public int getConta() {
         return conta;
@@ -29,15 +30,28 @@ public class Conta {
     public void setSaldo(float saldo) {
         this.saldo = saldo;
     }
-    
-    public void saque(float valorSaque){
-        this.saldo -= valorSaque;
+
+    public float getCheque() {
+        return cheque;
+    }
+
+    public void setCheque(float cheque) {
+        this.cheque = cheque;
     }
     
-    public void transferencia(float valorSaque, Conta contaDestino){
-        this.saldo -= valorSaque;
-        float saldoDestino = contaDestino.getSaldo() + valorSaque;
-        contaDestino.setSaldo(saldoDestino);
+    
+    
+    public void debito(float valor){
+        this.saldo += valor;
+    }
+    
+    public boolean credito(float valor){
+        if(this.saldo >= valor){
+            this.saldo -= valor;
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public String imprimeConta(){

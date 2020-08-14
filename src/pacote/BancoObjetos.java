@@ -20,9 +20,9 @@ public class BancoObjetos {
         System.out.println(conta2.imprimeConta());
         
         //Operação de saque. Precisa veriricar se existe suficiente para o saque
-        //conta1.saque(50);
+        conta1.credito(50); //credito = tirar dinheiro
+        conta2.debito(200); //debito = colocar dinheiro
         
-        //conta1.transferencia(100, conta2);
         System.out.println(conta1.imprimeConta());
         System.out.println(conta2.imprimeConta());
         
