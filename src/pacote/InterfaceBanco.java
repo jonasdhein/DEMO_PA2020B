@@ -6,6 +6,7 @@
 package pacote;
 
 import ferramentas.CaixaDeDialogo;
+import java.util.Random;
 
 /**
  *
@@ -22,14 +23,16 @@ public class InterfaceBanco extends javax.swing.JFrame {
     public InterfaceBanco() {
         initComponents();
         
+        Random gerador = new Random();
+        
         //Tudo começa por aqui
         conta1 = new Conta();
         conta2 = new Conta();
         
         conta1.setConta(1);
         conta1.setNome("Jonas");
-        conta1.setSaldo(200);
-        conta1.setCheque(500);
+        conta1.setSaldo(gerador.nextInt(1000));
+        conta1.setCheque(gerador.nextInt(1000));
         
         conta2.setConta(2);
         conta2.setNome("Juca");
@@ -202,7 +205,9 @@ public class InterfaceBanco extends javax.swing.JFrame {
             conta1.debito(valor);
             atualizarInformacoesTela();
             CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+            
             System.out.println("Operação de débito " + valor);
+            
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
         }
@@ -210,7 +215,6 @@ public class InterfaceBanco extends javax.swing.JFrame {
 
     private void btnSacarConta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacarConta1ActionPerformed
         try{
-            
             float valor = Float.parseFloat(txtValor1.getText());
             boolean resultado = conta1.credito(valor);
             if(resultado){
@@ -238,8 +242,10 @@ public class InterfaceBanco extends javax.swing.JFrame {
         try{
             
             float valor = Float.parseFloat(txtValor1.getText());
+            //tenta realizar um saque da conta 1
             boolean resultado = conta1.credito(valor);
             if(resultado){
+                //se der certo, vai depositar esse valor na conta 2
                 conta2.debito(valor);
                 atualizarInformacoesTela();
                 CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');

@@ -39,14 +39,12 @@ public class Conta {
         this.cheque = cheque;
     }
     
-    
-    
     public void debito(float valor){
         this.saldo += valor;
     }
     
     public boolean credito(float valor){
-        if(this.saldo >= valor){
+        if((this.saldo + this.cheque) >= valor){
             this.saldo -= valor;
             return true;
         }else{
@@ -57,6 +55,7 @@ public class Conta {
     public String imprimeConta(){
         return "Conta: " + this.conta + " - " + this.nome + " - Saldo: R$ " + this.saldo;
     }
+    
     
     
 }
