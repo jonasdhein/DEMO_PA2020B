@@ -1,11 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pacote;
 
 import ferramentas.CaixaDeDialogo;
+import ferramentas.Formatacao;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Random;
 
 /**
@@ -14,42 +13,29 @@ import java.util.Random;
  */
 public class InterfaceBanco extends javax.swing.JFrame {
 
-    /**
-     * Creates new form InterfaceBanco
-     */
-    Conta conta1;
-    Conta conta2;
+    public Conta conta1;
+    public Conta conta2;
     
     public InterfaceBanco() {
         initComponents();
         
-        Random gerador = new Random();
-        
-        //Tudo começa por aqui
-        conta1 = new Conta();
-        conta2 = new Conta();
-        
-        conta1.setConta(1);
-        conta1.setNome("Jonas");
-        conta1.setSaldo(gerador.nextInt(1000));
-        conta1.setCheque(gerador.nextInt(1000));
-        
-        conta2.setConta(2);
-        conta2.setNome("Juca");
-        conta2.setSaldo(500);
-        conta2.setCheque(1000);
-        
-        atualizarInformacoesTela();
-        
     }
 
     private void atualizarInformacoesTela(){
+        
+        ContaController controller = new ContaController();
+        float saldoConta1 = controller.buscarSaldo(conta1.getId());
+        float saldoConta2 = controller.buscarSaldo(conta2.getId());
+        
+        conta1.setSaldo(saldoConta1);
+        conta2.setSaldo(saldoConta2);
+        
         lblConta1.setText(conta1.getNome());
         lblSaldoConta1.setText(String.valueOf(conta1.getSaldo()));
-        lblChequeEspecialConta1.setText(String.valueOf(conta1.getCheque()));
+        lblChequeEspecialConta1.setText(String.valueOf(conta1.getCheque_especial()));
         lblConta2.setText(conta2.getNome());
         lblSaldoConta2.setText(String.valueOf(conta2.getSaldo()));
-        lblChequeEspecialConta2.setText(String.valueOf(conta2.getCheque()));
+        lblChequeEspecialConta2.setText(String.valueOf(conta2.getCheque_especial()));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -63,23 +49,43 @@ public class InterfaceBanco extends javax.swing.JFrame {
         lblConta1 = new javax.swing.JLabel();
         lblConta2 = new javax.swing.JLabel();
         btnTransferirConta1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnTransferir2 = new javax.swing.JButton();
         txtValor2 = new javax.swing.JTextField();
-        txtValor1 = new javax.swing.JTextField();
+        txtConta1 = new javax.swing.JTextField();
         lblSaldoConta1 = new javax.swing.JLabel();
         lblSaldoConta2 = new javax.swing.JLabel();
         btnSacarConta1 = new javax.swing.JButton();
         btnDepositarConta1 = new javax.swing.JButton();
-        btnDepositarConta2 = new javax.swing.JButton();
-        btnSacarConta2 = new javax.swing.JButton();
+        btnDepositar2 = new javax.swing.JButton();
+        btnSacar2 = new javax.swing.JButton();
         lblChequeEspecialConta1 = new javax.swing.JLabel();
         lblChequeEspecialConta2 = new javax.swing.JLabel();
+        txtValor3 = new javax.swing.JTextField();
+        lblData1 = new javax.swing.JLabel();
+        txtData1 = new javax.swing.JTextField();
+        btnData2 = new javax.swing.JButton();
+        btnData1 = new javax.swing.JButton();
+        btnData3 = new javax.swing.JButton();
+        txtNumeros = new javax.swing.JTextField();
+        lblNumeros = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        lblConta1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblConta1.setForeground(new java.awt.Color(102, 102, 102));
         lblConta1.setText("CONTA 1");
+        getContentPane().add(lblConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 6, -1, -1));
 
+        lblConta2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblConta2.setForeground(new java.awt.Color(102, 102, 102));
         lblConta2.setText("CONTA 2");
+        getContentPane().add(lblConta2, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 6, -1, -1));
 
         btnTransferirConta1.setText("Transferir");
         btnTransferirConta1.addActionListener(new java.awt.event.ActionListener() {
@@ -87,12 +93,27 @@ public class InterfaceBanco extends javax.swing.JFrame {
                 btnTransferirConta1ActionPerformed(evt);
             }
         });
+        getContentPane().add(btnTransferirConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 99, -1, -1));
 
-        jButton2.setText("Transferir");
+        btnTransferir2.setText("Transferir");
+        btnTransferir2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransferir2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnTransferir2, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 99, -1, -1));
+        getContentPane().add(txtValor2, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 71, 79, -1));
+        getContentPane().add(txtConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 71, 79, -1));
 
+        lblSaldoConta1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblSaldoConta1.setForeground(new java.awt.Color(102, 102, 102));
         lblSaldoConta1.setText("SALDO");
+        getContentPane().add(lblSaldoConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 28, -1, -1));
 
+        lblSaldoConta2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblSaldoConta2.setForeground(new java.awt.Color(102, 102, 102));
         lblSaldoConta2.setText("SALDO");
+        getContentPane().add(lblSaldoConta2, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 28, -1, -1));
 
         btnSacarConta1.setText("Sacar");
         btnSacarConta1.addActionListener(new java.awt.event.ActionListener() {
@@ -100,6 +121,7 @@ public class InterfaceBanco extends javax.swing.JFrame {
                 btnSacarConta1ActionPerformed(evt);
             }
         });
+        getContentPane().add(btnSacarConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 127, 79, -1));
 
         btnDepositarConta1.setText("Depositar");
         btnDepositarConta1.addActionListener(new java.awt.event.ActionListener() {
@@ -107,106 +129,86 @@ public class InterfaceBanco extends javax.swing.JFrame {
                 btnDepositarConta1ActionPerformed(evt);
             }
         });
+        getContentPane().add(btnDepositarConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 155, -1, -1));
 
-        btnDepositarConta2.setText("Depositar");
-        btnDepositarConta2.addActionListener(new java.awt.event.ActionListener() {
+        btnDepositar2.setText("Depositar");
+        btnDepositar2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDepositarConta2ActionPerformed(evt);
+                btnDepositar2ActionPerformed(evt);
             }
         });
+        getContentPane().add(btnDepositar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(287, 155, -1, -1));
 
-        btnSacarConta2.setText("Sacar");
-        btnSacarConta2.addActionListener(new java.awt.event.ActionListener() {
+        btnSacar2.setText("Sacar");
+        btnSacar2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSacarConta2ActionPerformed(evt);
+                btnSacar2ActionPerformed(evt);
             }
         });
+        getContentPane().add(btnSacar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(287, 127, 80, -1));
 
+        lblChequeEspecialConta1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblChequeEspecialConta1.setForeground(new java.awt.Color(102, 102, 102));
         lblChequeEspecialConta1.setText("CHEQUE");
+        getContentPane().add(lblChequeEspecialConta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
 
+        lblChequeEspecialConta2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblChequeEspecialConta2.setForeground(new java.awt.Color(102, 102, 102));
         lblChequeEspecialConta2.setText("CHEQUE");
+        getContentPane().add(lblChequeEspecialConta2, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 49, -1, -1));
+        getContentPane().add(txtValor3, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 71, 79, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnDepositarConta1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblConta1)
-                                .addComponent(lblSaldoConta1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(btnSacarConta1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnTransferirConta1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtValor1))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblConta2)
-                                .addComponent(lblSaldoConta2)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtValor2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(lblChequeEspecialConta2))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnDepositarConta2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSacarConta2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(54, 54, 54))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblChequeEspecialConta1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblConta1)
-                    .addComponent(lblConta2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSaldoConta1)
-                    .addComponent(lblSaldoConta2))
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblChequeEspecialConta1)
-                    .addComponent(lblChequeEspecialConta2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtValor2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtValor1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTransferirConta1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSacarConta1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDepositarConta1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSacarConta2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDepositarConta2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        lblData1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblData1.setForeground(new java.awt.Color(102, 102, 102));
+        lblData1.setText("DATA");
+        getContentPane().add(lblData1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 240, 80, -1));
+        getContentPane().add(txtData1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 80, -1));
+
+        btnData2.setText("CONVERTE PARA DMA");
+        btnData2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnData2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnData2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 170, -1));
+
+        btnData1.setText("CONVERTE PARA AMD");
+        btnData1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnData1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnData1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 220, 170, -1));
+
+        btnData3.setText("APENAS NUMEROS");
+        btnData3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnData3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnData3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 170, -1));
+        getContentPane().add(txtNumeros, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 80, -1));
+
+        lblNumeros.setForeground(new java.awt.Color(102, 102, 102));
+        lblNumeros.setText("jLabel1");
+        getContentPane().add(lblNumeros, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 280, 80, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDepositarConta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositarConta1ActionPerformed
         try{
-            float valor = Float.parseFloat(txtValor1.getText());
-            conta1.debito(valor);
-            atualizarInformacoesTela();
-            CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+            float valor = Float.parseFloat(txtConta1.getText());
             
-            System.out.println("Operação de débito " + valor);
+            ContaController controller = new ContaController();
+            boolean retorno = controller.debito(conta1, valor);
+            if(retorno){
+                atualizarInformacoesTela();
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+                System.out.println("Operação de débito " + valor);
+            }else{
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao realizar operação", 'e');
+            }
             
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
@@ -215,13 +217,16 @@ public class InterfaceBanco extends javax.swing.JFrame {
 
     private void btnSacarConta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacarConta1ActionPerformed
         try{
-            float valor = Float.parseFloat(txtValor1.getText());
-            boolean resultado = conta1.credito(valor);
-            if(resultado){
+            float valor = Float.parseFloat(txtConta1.getText());
+            
+            ContaController controller = new ContaController();
+            boolean retorno = controller.credito(conta1, valor);
+            if(retorno){
                 atualizarInformacoesTela();
                 CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+                System.out.println("Operação de crédito " + valor);
             }else{
-                CaixaDeDialogo.obterinstancia().exibirMensagem("Saldo insuficiente", 'a');
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao realizar operação", 'e');
             }
             
         }catch(Exception ex){
@@ -230,25 +235,62 @@ public class InterfaceBanco extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnSacarConta1ActionPerformed
 
-    private void btnDepositarConta2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositarConta2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDepositarConta2ActionPerformed
+    private void btnDepositar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositar2ActionPerformed
+        try{
+            float valor = Float.parseFloat(txtValor2.getText());
+            
+            ContaController controller = new ContaController();
+            boolean retorno = controller.debito(conta2, valor);
+            if(retorno){
+                atualizarInformacoesTela();
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+                System.out.println("Operação de débito " + valor);
+            }else{
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao realizar operação", 'e');
+            }
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
+        }
+    }//GEN-LAST:event_btnDepositar2ActionPerformed
 
-    private void btnSacarConta2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacarConta2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSacarConta2ActionPerformed
+    private void btnSacar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacar2ActionPerformed
+         try{
+            float valor = Float.parseFloat(txtValor2.getText());
+            
+            ContaController controller = new ContaController();
+            boolean retorno = controller.credito(conta2, valor);
+            if(retorno){
+                atualizarInformacoesTela();
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+                System.out.println("Operação de crédito " + valor);
+            }else{
+                CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao realizar operação", 'e');
+            }
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
+        }
+    }//GEN-LAST:event_btnSacar2ActionPerformed
 
     private void btnTransferirConta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferirConta1ActionPerformed
         try{
             
-            float valor = Float.parseFloat(txtValor1.getText());
+            float valor = Float.parseFloat(txtConta1.getText());
             //tenta realizar um saque da conta 1
-            boolean resultado = conta1.credito(valor);
+            //boolean resultado = conta1.credito(valor);
+            ContaController controller = new ContaController();
+            boolean resultado = controller.credito(conta1, valor);
             if(resultado){
                 //se der certo, vai depositar esse valor na conta 2
-                conta2.debito(valor);
-                atualizarInformacoesTela();
-                CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+                //conta2.debito(valor);
+                resultado = controller.debito(conta2, valor);
+                if(resultado){
+                    atualizarInformacoesTela();
+                    CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+                }else{
+                    CaixaDeDialogo.obterinstancia().exibirMensagem("Erro na operação", 'a');
+                 }
             }else{
                 CaixaDeDialogo.obterinstancia().exibirMensagem("Saldo insuficiente", 'a');
             }
@@ -257,6 +299,72 @@ public class InterfaceBanco extends javax.swing.JFrame {
             CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
         }
     }//GEN-LAST:event_btnTransferirConta1ActionPerformed
+
+    private void btnTransferir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferir2ActionPerformed
+//        try{
+//            
+//            float valor = Float.parseFloat(txtValor2.getText());
+//            //tenta realizar um saque da conta 2
+//            boolean resultado = conta2.credito(valor);
+//            if(resultado){
+//                //se der certo, vai depositar esse valor na conta 1
+//                conta1.debito(valor);
+//                atualizarInformacoesTela();
+//                CaixaDeDialogo.obterinstancia().exibirMensagem("Operação realizada com sucesso", 'i');
+//            }else{
+//                CaixaDeDialogo.obterinstancia().exibirMensagem("Saldo insuficiente", 'a');
+//            }
+//            
+//        }catch(Exception ex){
+//            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
+//        }
+    }//GEN-LAST:event_btnTransferir2ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        ContaController controller = new ContaController();
+        //conta1 = controller.buscar(1);
+        conta2 = controller.buscar(2);
+        
+        atualizarInformacoesTela();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnData1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnData1ActionPerformed
+        try{
+            
+            String retorno = "";
+            String data_amd = txtData1.getText();
+            retorno = Formatacao.ajustaDataDMA(data_amd);
+            
+            lblData1.setText(retorno);
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
+        }
+    }//GEN-LAST:event_btnData1ActionPerformed
+
+    private void btnData2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnData2ActionPerformed
+        try{
+            
+            String retorno = "";
+            String data_dma = txtData1.getText();
+            retorno = Formatacao.ajustaDataAMD(data_dma);
+            
+            lblData1.setText(retorno);
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
+        }
+    }//GEN-LAST:event_btnData2ActionPerformed
+
+    private void btnData3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnData3ActionPerformed
+       try{
+            
+            lblNumeros.setText(Formatacao.removerFormatacao(txtNumeros.getText()));
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage(), 'e');
+        }
+    }//GEN-LAST:event_btnData3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -294,19 +402,27 @@ public class InterfaceBanco extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnData1;
+    private javax.swing.JButton btnData2;
+    private javax.swing.JButton btnData3;
+    private javax.swing.JButton btnDepositar2;
     private javax.swing.JButton btnDepositarConta1;
-    private javax.swing.JButton btnDepositarConta2;
+    private javax.swing.JButton btnSacar2;
     private javax.swing.JButton btnSacarConta1;
-    private javax.swing.JButton btnSacarConta2;
+    private javax.swing.JButton btnTransferir2;
     private javax.swing.JButton btnTransferirConta1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel lblChequeEspecialConta1;
     private javax.swing.JLabel lblChequeEspecialConta2;
     private javax.swing.JLabel lblConta1;
     private javax.swing.JLabel lblConta2;
+    private javax.swing.JLabel lblData1;
+    private javax.swing.JLabel lblNumeros;
     private javax.swing.JLabel lblSaldoConta1;
     private javax.swing.JLabel lblSaldoConta2;
-    private javax.swing.JTextField txtValor1;
+    private javax.swing.JTextField txtConta1;
+    private javax.swing.JTextField txtData1;
+    private javax.swing.JTextField txtNumeros;
     private javax.swing.JTextField txtValor2;
+    private javax.swing.JTextField txtValor3;
     // End of variables declaration//GEN-END:variables
 }
