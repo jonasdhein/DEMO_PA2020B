@@ -36,6 +36,10 @@ public class InterfaceBanco extends javax.swing.JFrame {
         lblConta2.setText(conta2.getNome());
         lblSaldoConta2.setText(String.valueOf(conta2.getSaldo()));
         lblChequeEspecialConta2.setText(String.valueOf(conta2.getCheque_especial()));
+        
+        controller.preencher(jtbTabela);
+        
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +72,8 @@ public class InterfaceBanco extends javax.swing.JFrame {
         btnData3 = new javax.swing.JButton();
         txtNumeros = new javax.swing.JTextField();
         lblNumeros = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtbTabela = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -192,6 +198,21 @@ public class InterfaceBanco extends javax.swing.JFrame {
         lblNumeros.setForeground(new java.awt.Color(102, 102, 102));
         lblNumeros.setText("jLabel1");
         getContentPane().add(lblNumeros, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 280, 80, -1));
+
+        jtbTabela.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jtbTabela);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 317, 380, 190));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -411,6 +432,8 @@ public class InterfaceBanco extends javax.swing.JFrame {
     private javax.swing.JButton btnSacarConta1;
     private javax.swing.JButton btnTransferir2;
     private javax.swing.JButton btnTransferirConta1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jtbTabela;
     private javax.swing.JLabel lblChequeEspecialConta1;
     private javax.swing.JLabel lblChequeEspecialConta2;
     private javax.swing.JLabel lblConta1;

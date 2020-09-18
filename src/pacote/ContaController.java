@@ -152,8 +152,8 @@ public class ContaController {
             Conexao.closeConnection(con, stmt);
         }
     }
-    /*
-    public void preencher(JTable ???) {
+    
+    public void preencher(JTable jtbTabela) {
 
         Conexao.abreConexao();
         
@@ -161,6 +161,7 @@ public class ContaController {
         Vector dadosTabela = new Vector(); //receber os dados do banco
         
         cabecalhos.add("Código");
+        cabecalhos.add("Conta");
         cabecalhos.add("Nome");
         cabecalhos.add("Excluir");
              
@@ -169,9 +170,8 @@ public class ContaController {
         try {
 
             String SQL = "";
-            SQL = " SELECT id, nome ";
-            SQL += " FROM candidatos ";
-            SQL += " WHERE data_exclusao is null ";
+            SQL = " SELECT id, conta, nome ";
+            SQL += " FROM contas ";
             SQL += " ORDER BY nome ";
             
             result = Conexao.stmt.executeQuery(SQL);
@@ -182,6 +182,7 @@ public class ContaController {
                 
                 linha.add(result.getInt(1));
                 linha.add(result.getString(2));
+                linha.add(result.getString(3));
                 linha.add("");
                 
                 dadosTabela.add(linha);
@@ -192,7 +193,7 @@ public class ContaController {
             System.out.println(e);
         }
 
-        jtbAQUI.setModel(new DefaultTableModel(dadosTabela, cabecalhos) {
+        jtbTabela.setModel(new DefaultTableModel(dadosTabela, cabecalhos) {
 
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -202,26 +203,29 @@ public class ContaController {
         });
 
         // permite seleção de apenas uma linha da tabela
-        jtbAQUI.setSelectionMode(0);
+        jtbTabela.setSelectionMode(0);
 
         // redimensiona as colunas de uma tabela
         TableColumn column = null;
         for (int i = 0; i <= 2; i++) {
-            column = jtbAQUI.getColumnModel().getColumn(i);
+            column = jtbTabela.getColumnModel().getColumn(i);
             switch (i) {
-                case 0:
-                    column.setPreferredWidth(60);
+                case 0: //id
+                    column.setPreferredWidth(80);
                     break;
-                case 1:
-                    column.setPreferredWidth(230);
+                case 1: //conta
+                    column.setPreferredWidth(80);
                     break;
-                case 2:
+                case 2: //nome
+                    column.setPreferredWidth(250);
+                    break;
+                case 3:
                     column.setPreferredWidth(10);
                     break;
             }
         }
         
-        jtbAQUI.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        jtbTabela.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) 
@@ -238,7 +242,7 @@ public class ContaController {
             }
         });
     }
-    */
+    
     
 //    public boolean credito(float valor){
 //        if((this.saldo + this.cheque_especial) >= valor){
