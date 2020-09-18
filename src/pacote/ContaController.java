@@ -235,7 +235,7 @@ public class ContaController {
                 if (row % 2 == 0) {
                     setBackground(Color.LIGHT_GRAY);
                 } else {
-                    setBackground(Color.WHITE);
+                    setBackground(Color.GRAY);
                 }
                 
                 return this;
